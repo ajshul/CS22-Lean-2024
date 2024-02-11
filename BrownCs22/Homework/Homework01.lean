@@ -62,16 +62,18 @@ Fill in the `sorry` in the proof below.
 The elimination and introduction rules we talked about in Lecture 4
 will be very helpful here!
 
-
 -/
 
 @[autograded 3]
 theorem problem_1 : (p ∧ q) ∧ (r ∧ s) → (p ∧ r) := by
-  sorry
+  assume hleft
+  eliminate hleft with hleftleft hleftright
+  eliminate hleftright with hr hs
+  eliminate hleftleft with hp hq
+  split_goal
+  {assumption}
+  {assumption}
   done
-
-
-
 /-
 
 ## Problem 2
@@ -93,7 +95,11 @@ Again, your task is to fill in the `sorry` below to prove this statement.
 
 @[autograded 3]
 theorem problem_2 : (p → ¬ q) → ¬ (p ∧ q) := by
-  sorry
+  assume hleft
+  assume hright
+  eliminate hright with hp hq
+  have hq : ¬ q := hleft hp
+  contradiction
   done
 
 
@@ -124,5 +130,48 @@ Your task: translate this argument to Lean.
 
 @[autograded 4]
 theorem problem_3 : ((p ∨ q) ∧ (p → r) ∧ (q → s)) → (r ∨ s) := by
-  sorry
+  assume hleft
+  eliminate hleft with hpq hprqs
+  eliminate hprqs with hpr hqs
+  eliminate hpq with hp hq
+  left
+  have hr : r := hpr hp
+  assumption
+  right
+  have hs : s := hqs hq
+  assumption
   done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/-
+ assume hleft
+  eliminate hleft with hleftleft hleftright
+  eliminate hleftright with hp_r hq_s
+  eliminate hleftleft with hp hq
+
+  left
+  have hr : r := hp_r hp
+  {assumption}
+
+  right
+  have hs : s := hq_s hq
+  {assumption}
+-/
